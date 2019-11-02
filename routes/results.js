@@ -19,7 +19,7 @@ async function getLinks(userID){
 }
 
 async function requestToFindTenders(word, from ,to){
-    const response = await axios.get('http://zakupki.gov.ru/epz/order/quicksearch/rss', {
+    const response = await axios.get('http://zakupki.gov.ru/epz/order/extendedsearch/rss.html?', {
         params: {
             searchString: word,
             morphology:'on',
