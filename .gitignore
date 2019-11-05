@@ -3,6 +3,7 @@ node_modules
 /dist
 /gzFront
 /prod-server
+/helpers
 
 # local env files
 .env.local
