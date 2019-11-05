@@ -36,7 +36,9 @@ require('./config/passport')(passport);
 //DB CONN
 const db = require('./config/db');
 mongoose.connect(db.mongoURL,{
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology
+        : true
 })
     .then(console.log('MongoDB connected'))
     .catch(err => console.log(err));
