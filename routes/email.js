@@ -8,6 +8,9 @@ const {hbsOpts, transportOpts} = require('../helpers/emailOpts');
 router.get('/', function (req, res, next) {
     let transporter = nodeMailer.createTransport(transportOpts);
     transporter.use('compile', hbs(hbsOpts));
+    if (!(req.query.links).includes('http')){
+        req.query.links = 'http://zakupki.gov.ru'+ req.query.links
+    }
     let mailOptions = {
         from:'zakupkigov.grabber@mail.ru',
         subject: 'tenders',
