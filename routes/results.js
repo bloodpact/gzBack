@@ -17,28 +17,12 @@ async function getLinks(userID){
                           return res.status(400).json({msg:err})
                       });
 }
-
 async function requestToFindTenders(word, from ,to){
     const response = await axios.get('http://zakupki.gov.ru/epz/order/extendedsearch/rss.html?', {
         params: {
             searchString: word,
-            morphology:'on',
-            pageNumber:1,
-            sortDirection:false,
-            recordsPerPage: '_10',
-            showLotsInfoHidden:false,
-            fz44:'on',
-            fz223:'on',
-            ppRf615:'on',
-            af:'on',
-            ca:'on',
-            pc:'on',
-            pa:'on',
-            currencyIdGeneral:'-1',
             publishDateFrom:from,
             publishDateTo:to,
-            regionDeleted:false,
-            sortBy:'UPDATE_DATE'
         },
         headers: {
             'accept': 'application/json',
@@ -66,7 +50,7 @@ async function getArrTenders(userID, from, to){
         })
         )
     } catch (err){
-        return res.status(400).json({msg:err})
+        console.log(err)
     }
 }
 
