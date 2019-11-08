@@ -23,6 +23,7 @@ async function requestToFindTenders(word, from ,to){
             searchString: word,
             publishDateFrom:from,
             publishDateTo:to,
+            recordsPerPage:'_10'
         },
         headers: {
             'accept': 'application/json',
@@ -34,28 +35,42 @@ async function requestToFindTenders(word, from ,to){
 async function getArrTenders(userID, from, to){
     const arrWords = await getLinks(userID);
     try{
-        return  await Promise.all(arrWords.map(async (currentValue) => {
-            //check for 24 hours or range of dates, smthng wrong with                    
+        return  await Promise.all(arrWords.map(async (currentValue, i ) => {
+            //check for 24 hours or range of dates, smthng wrong with
             // calculating dates on server
-                     if (currentValue.check24){
-                         resp = await requestToFindTenders(currentValue.wordFind,
-                        (from),
-                        (to));
-                         return resp
-                     }else{
-                         return await requestToFindTenders(currentValue.wordFind,
-                             (currentValue.dateFromP),
-                             (currentValue.dateToP));
-                     }
+            // special promise to get return from timeout
+               const promiseToReturnFromTimeOut = () => new Promise(res => {
+                    setTimeout(async() => {
+                        if (currentValue.check24){
+                            res(await requestToFindTenders(currentValue.wordFind,
+                                (from),
+                                (to)))
+                        }else{
+                            res (await requestToFindTenders(currentValue.wordFind,
+                                (currentValue.dateFromP),
+                                (currentValue.dateToP)));
+                        }
+                    }, i * 1000);
+                })
+                async function f() {
+                    return  await promiseToReturnFromTimeOut()
+                }
+                return  f()
         })
         )
     } catch (err){
-        console.log(err)
+        console.log(err);
+        return err
     }
 }
 
 router.get('/',ensureAuthenticated, async(req, res)=>{
-    const tenders = await getArrTenders(req.query.user, req.query.from, req.query.to);
-    res.send([].concat.apply([], tenders))
+    try {
+        const tenders = await getArrTenders(req.query.user, req.query.from, req.query.to);
+        res.send([].concat.apply([], tenders))
+    } catch (e) {
+        res.send(e)
+    }
+
 });
 module.exports = router;
