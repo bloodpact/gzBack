@@ -12,8 +12,8 @@ module.exports ={
         port: 465,
         secure: true,
         auth: {
-            user: 'zakupkigov.grabber@mail.ru',
-            pass:'Qwertyuiop1!'
+            user: 'user',
+            pass:'pass'
         }
     }
 };
